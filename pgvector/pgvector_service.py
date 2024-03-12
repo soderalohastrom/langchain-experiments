@@ -97,4 +97,4 @@ class PgvectorService:
                 connection=connection,
                 embedding_function=self.embeddings,
             )
-            pgvector.delete_collection()
+            # pgvector.delete_collection()

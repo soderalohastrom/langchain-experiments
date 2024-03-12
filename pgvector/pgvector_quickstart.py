@@ -35,61 +35,7 @@ First, we compare to Pinecone, a managed vector store service.
 """
 
 
-# --------------------------------------------------------------
-# Create / Load the Pinecone index
-# --------------------------------------------------------------
-
-pinecone.init(
-    api_key=os.getenv("PINECONE_API_KEY"), environment=os.getenv("PINECONE_ENV")
-)
-
-index_name = "demo-index"
-if index_name not in pinecone.list_indexes():
-    pinecone.create_index(name=index_name, metric="cosine", dimension=1536)
-    pinecone_docsearch = Pinecone.from_documents(
-        docs, embeddings, index_name="demo-index"
-    )
-else:
-    pinecone_docsearch = Pinecone.from_existing_index(index_name, embeddings)
-
-# --------------------------------------------------------------
-# Query the index with LanChain
-# --------------------------------------------------------------
-
-
-def run_query_pinecone(docsearch, query):
-    docs = docsearch.similarity_search(query, k=4)
-    result = docs[0].page_content
-    return result
-
-
-def calculate_average_execution_time(func, *args, **kwargs):
-    total_execution_time = 0
-    num_runs = 10
-    for _ in range(num_runs):
-        start_time = time.time()
-        result = func(*args, **kwargs)  # Execute the function with its arguments
-        end_time = time.time()
-        execution_time = end_time - start_time
-        total_execution_time += execution_time
-    average_execution_time = round(total_execution_time / num_runs, 2)
-    print(result)
-    print(
-        f"\nThe function took an average of {average_execution_time} seconds to execute."
-    )
-    return
-
-
-calculate_average_execution_time(
-    run_query_pinecone, docsearch=pinecone_docsearch, query=query
-)
-
-
-"""
-Now, we compare to PGVector, an open source vector store service.
-
-"""
-
+# 
 # --------------------------------------------------------------
 # Create a PGVector Store
 # --------------------------------------------------------------
